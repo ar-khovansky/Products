@@ -159,4 +159,15 @@ class Product
 
         return $this;
     }
+
+    /**
+     * @JMS\PostDeserialize
+     */
+    public function postDeserialize()
+    {
+        if ( $this->description === NULL )
+            $this->description = '';
+        if ( $this->photoPath === NULL )
+            $this->photoPath = '';
+    }
 }
