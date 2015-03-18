@@ -1,0 +1,15 @@
+<table class="table">
+    <tr ng-repeat="product in products">
+        <td>
+            <div class="col-xs-6 col-sm-4 thumbnail">
+                <img src="{{product.photo_path}}" alt="Photo">
+            </div>
+            <div>
+                <h4>{{product.title}}</h4>
+                <div class="normal-text">{{product.description}}</div>
+            </div>
+            <a class="btn btn-primary" ui-sref=".edit({id: product.id})">Edit</a>
+            <a class="btn btn-danger"  ng-click="deleteProduct(product)">Delete</a>
+        </td>
+    </tr>
+</table>

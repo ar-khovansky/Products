@@ -1,5 +1,38 @@
 {% extends 'base.html.twig' %}
 
 {% block body %}
-    Homepage.
+    <nav class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle"
+                        ng-init="isCollapsed = true" ng-click="isCollapsed = !isCollapsed">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <span class="navbar-brand">{{ appName }}</span>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="navbar-collapse bs-js-navbar-collapse" collapse="isCollapsed">
+                <ul class="nav navbar-nav">
+                    <li><a ui-sref="products.new">New product</a></li>
+                </ul>
+            </div>
+
+        </div>
+    </nav>
+    <div class="container">
+        <div class="row top-buffer">
+            <div class="col-md-8 col-md-offset-2">
+                <div ui-view></div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript" src="frontend/js/app.js"></script>
+    <script type="text/javascript" src="frontend/js/controllers.js"></script>
+    <script type="text/javascript" src="frontend/js/services.js"></script>
 {% endblock %}
