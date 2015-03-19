@@ -14,12 +14,31 @@ angular.module('productsApp.controllers', [])
     $scope.$state = $state;
 })
 
-.controller('ProductCreateController', function($scope, $state, $stateParams, Product) {
+.controller('ProductCreateController', function($scope, $state, $stateParams, $upload, Product) {
     $scope.product = new Product();  //create new instance. Properties will be set via ng-model on UI
 
+    $scope.inh = {};
+
     $scope.ok = function() {
+        console.log($scope.inh.files);
         $scope.product.$save(function() {
-            $state.go('^', null, {reload:true}); // on success go back
+            if ( $scope.inh.files && $scope.inh.files.length ) {
+                var file = $scope.inh.files[0];
+
+                $upload.upload({
+                    url: '/products/'+$scope.product.id+'/photo',
+                    method: 'POST',
+                    file: file
+                }).success(function(data, status, headers, config) {
+                    //console.log('file ' + config.file.name + ' uploaded. Response: ' + data + " .Location: " + headers.location);
+                    $state.go('^', null, {reload:true});
+                }).error(function(data, status, headers, config) {
+                    //console.log('file ' + config.file.name + ' upload error. Response: ' + data);
+                    $state.go('^', null, {reload:true});
+                });
+            }
+            else
+                $state.go('^', null, {reload:true});
         });
     };
 
@@ -28,10 +47,28 @@ angular.module('productsApp.controllers', [])
     };
 })
 
-.controller('ProductEditController', function($scope, $state, $stateParams, Product) {
+.controller('ProductEditController', function($scope, $state, $stateParams, $upload, Product) {
+    $scope.inh = {};
+
     $scope.ok = function() {
         $scope.product.$update(function() {
-            $state.go('^', null, {reload:true}); // on success go back
+            if ( $scope.inh.files && $scope.inh.files.length ) {
+                var file = $scope.inh.files[0];
+
+                $upload.upload({
+                    url: '/products/'+$scope.product.id+'/photo',
+                    method: 'POST',
+                    file: file
+                }).success(function(data, status, headers, config) {
+                    //console.log('file ' + config.file.name + ' uploaded. Response: ' + data + " .Location: " + headers.location);
+                    $state.go('^', null, {reload:true});
+                }).error(function(data, status, headers, config) {
+                    //console.log('file ' + config.file.name + ' upload error. Response: ' + data);
+                    $state.go('^', null, {reload:true});
+                });
+            }
+            else
+                $state.go('^', null, {reload:true});
         });
     };
 

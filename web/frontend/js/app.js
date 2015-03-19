@@ -1,5 +1,6 @@
 angular.module('productsApp', ['ui.router', 'ui.bootstrap', 'ui.bootstrap.modal',
                                'ngResource',
+                               'angularFileUpload',
                                'productsApp.controllers', 'productsApp.services'])
 
 // Using modal state provider technique from http://stackoverflow.com/a/24726331
@@ -42,12 +43,14 @@ angular.module('productsApp', ['ui.router', 'ui.bootstrap', 'ui.bootstrap.modal'
     modalStateProvider.state('products.new', {
         url: '/new',
         templateUrl: 'frontend/partials/product-new.html',
-        controller: 'ProductCreateController'
+        controller: 'ProductCreateController',
+        size: 'lg'
     });
     modalStateProvider.state('products.edit', {
         url: '/:id/edit',
         templateUrl: 'frontend/partials/product-edit.html',
-        controller: 'ProductEditController'
+        controller: 'ProductEditController',
+        size: 'lg'
     });
 
     //$locationProvider.html5Mode(true);
