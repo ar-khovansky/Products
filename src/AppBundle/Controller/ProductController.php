@@ -2,6 +2,7 @@
 
 namespace AppBundle\Controller;
 
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\Validator\ConstraintViolationListInterface;
@@ -51,7 +52,7 @@ class ProductController extends FosRestController
         $em->persist($product);
         $em->flush();
 
-        return $this->view(null, Response::HTTP_CREATED,
+        return $this->view($product, Response::HTTP_CREATED,
             array('Location' =>
                   $this->generateUrl('app_product_get', array('id' => $product->getId()), true)));
     }
@@ -94,5 +95,24 @@ class ProductController extends FosRestController
 
         $em->remove($product);
         $em->flush();
+    }
+
+    /**
+     * @Post("/products/{id}/photo")
+     * @View(populateDefaultVars=false)
+     */
+    public function uploadPhotoAction(Product $product, Request $request)
+    {
+        $file = $request->files->get($request->files->keys()[0]);
+        $product->setPhoto($file);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->flush();
+
+        dump($product);
+        dump($product->getPhotoWebPath());
+
+        return $this->view(null, Response::HTTP_CREATED,
+            array('Location' => $product->getPhotoWebPath()));
     }
 }
