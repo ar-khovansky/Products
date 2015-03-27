@@ -57,6 +57,16 @@
         "symfony-assets-install": "relative",
         "incenteev-parameters": {
             "file": "app/config/parameters.yml"
+        },
+
+        "paas": {
+            "framework": "symfony2",
+            "document-root": "web",
+            "index-document": "app.php",
+
+            "compile": [
+                "php app/console doctrine:schema:update --force"
+            ]
         }
     }
 }
