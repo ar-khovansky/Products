@@ -109,9 +109,6 @@ class ProductController extends FosRestController
         $em = $this->getDoctrine()->getManager();
         $em->flush();
 
-        dump($product);
-        dump($product->getPhotoWebPath());
-
         return $this->view(null, Response::HTTP_CREATED,
             array('Location' => $product->getPhotoWebPath()));
     }
