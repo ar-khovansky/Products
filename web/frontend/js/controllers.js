@@ -1,45 +1,27 @@
 angular.module('productsApp.controllers', [])
 
-.controller('ProductListController', function($scope, $state, popupService, $window, Product) {
-    $scope.products = Product.query();
+.controller('ProductListController', function($scope, $state, popupService, $window, productsModel) {
+    $scope.products = productsModel.getProducts();
 
     $scope.deleteProduct = function(product) {
         if (popupService.showPopup('Do you want to delete the product?')) {
-            product.$delete(function() {
-                $state.reload();
-            });
+            productsModel.deleteProduct(product);
         }
     };
 
     $scope.$state = $state;
 })
 
-.controller('ProductCreateController', function($scope, $state, $stateParams, $upload, Product) {
-    $scope.product = new Product();  //create new instance. Properties will be set via ng-model on UI
+.controller('ProductCreateController', function($scope, $state, productsModel) {
+    $scope.product = productsModel.newProduct();  //create new instance. Properties will be set via ng-model on UI
 
     $scope.inh = {};
 
     $scope.ok = function() {
-        console.log($scope.inh.files);
-        $scope.product.$save(function() {
-            if ( $scope.inh.files && $scope.inh.files.length ) {
-                var file = $scope.inh.files[0];
+        var file = $scope.inh.files && $scope.inh.files.length ? $scope.inh.files[0] : null;
+        productsModel.addProduct($scope.product, file);
 
-                $upload.upload({
-                    url: '/products/'+$scope.product.id+'/photo',
-                    method: 'POST',
-                    file: file
-                }).success(function(data, status, headers, config) {
-                    //console.log('file ' + config.file.name + ' uploaded. Response: ' + data + " .Location: " + headers.location);
-                    $state.go('^', null, {reload:true});
-                }).error(function(data, status, headers, config) {
-                    //console.log('file ' + config.file.name + ' upload error. Response: ' + data);
-                    $state.go('^', null, {reload:true});
-                });
-            }
-            else
-                $state.go('^', null, {reload:true});
-        });
+        $state.go('^');
     };
 
     $scope.cancel = function() {
@@ -47,40 +29,21 @@ angular.module('productsApp.controllers', [])
     };
 })
 
-.controller('ProductEditController', function($scope, $state, $stateParams, $upload, Product) {
+.controller('ProductEditController', function($scope, $state, $stateParams, productsModel) {
+    $scope.product = productsModel.getProductCopy($stateParams.id);
+
     $scope.inh = {};
 
     $scope.ok = function() {
-        $scope.product.$update(function() {
-            if ( $scope.inh.files && $scope.inh.files.length ) {
-                var file = $scope.inh.files[0];
+        var file = $scope.inh.files && $scope.inh.files.length ? $scope.inh.files[0] : null;
+        productsModel.updateProduct($scope.product, file);
 
-                $upload.upload({
-                    url: '/products/'+$scope.product.id+'/photo',
-                    method: 'POST',
-                    file: file
-                }).success(function(data, status, headers, config) {
-                    //console.log('file ' + config.file.name + ' uploaded. Response: ' + data + " .Location: " + headers.location);
-                    $state.go('^', null, {reload:true});
-                }).error(function(data, status, headers, config) {
-                    //console.log('file ' + config.file.name + ' upload error. Response: ' + data);
-                    $state.go('^', null, {reload:true});
-                });
-            }
-            else
-                $state.go('^', null, {reload:true});
-        });
+        $state.go('^');
     };
 
     $scope.cancel = function() {
         $state.go('^');
     };
-
-    $scope.loadProduct = function() { //Issues a GET request to /products/:id to get a product to update
-        $scope.product = Product.get({ id: $stateParams.id });
-    };
-
-    $scope.loadProduct(); // Load product from server
 })
 
 ;
